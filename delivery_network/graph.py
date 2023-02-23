@@ -15,7 +15,7 @@ class Graph:
     nb_edges: int
         The number of edges. 
     """
-
+jjj
     def __init__(self, nodes=[]):
         """
         Initializes the graph with a set of nodes, and no edges. 
