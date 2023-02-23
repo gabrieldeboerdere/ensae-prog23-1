@@ -28,7 +28,6 @@ class Graph:
         self.graph = dict([(n, []) for n in nodes])
         self.nb_nodes = len(nodes)
         self.nb_edges = 0
-    
 
     def __str__(self):
         """Prints the graph as a list of neighbors for each node (one per line)"""
@@ -55,29 +54,35 @@ class Graph:
         dist: numeric (int or float), optional
             Distance between node1 and node2 on the edge. Default is 1.
         """
-        raise NotImplementedError
+        self.nb_edges += 1
+        self.graph[node1].append([node2,power_min])
+        self.graph[node2].append([node1,power_min])
+
+g = Graph()
+g.__init__([1,2,3])
+g.add_edge(1, 2, 10)
+g.add_edge(1,3,15)
+print(g)
+
+#     def get_path_with_power(self, src, dest, power):
+#         raise NotImplementedError
     
+#    def connected_components(self):
+#         raise NotImplementedError
 
-    def get_path_with_power(self, src, dest, power):
-        raise NotImplementedError
+
+#     def connected_components_set(self):
+#         """
+#         The result should be a set of frozensets (one per component), 
+#         For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
+#         """
+#         return set(map(frozenset, self.connected_components()))
     
-
-    def connected_components(self):
-        raise NotImplementedError
-
-
-    def connected_components_set(self):
-        """
-        The result should be a set of frozensets (one per component), 
-        For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
-        """
-        return set(map(frozenset, self.connected_components()))
-    
-    def min_power(self, src, dest):
-        """
-        Should return path, min_power. 
-        """
-        raise NotImplementedError
+#     def min_power(self, src, dest):
+#         """
+#         Should return path, min_power. 
+#         """
+#         raise NotImplementedError
 
 
 def graph_from_file(filename):
