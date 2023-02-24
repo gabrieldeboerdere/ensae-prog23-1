@@ -58,24 +58,37 @@ class Graph:
         self.graph[node1].append([node2,power_min])
         self.graph[node2].append([node1,power_min])
 
-g = Graph()
-g.__init__([1,2,3])
-g.add_edge(1, 2, 10)
-g.add_edge(1,3,15)
-print(g)
 
-#     def get_path_with_power(self, src, dest, power):
-#         raise NotImplementedError
-    
-#    def connected_components(self):
-#         raise NotImplementedError
+    # def get_path_with_power(self, src, dest, power):
+    #     raise NotImplementedError
 
+    def connected_components(self):
+        visite={}
+        for x in self.nodes:
+            visite[x]=False
+        self.cc=[]
+        for y in self.nodes:
+            l=[]
+            self.explore(visite,y)
+            for i in visite:
+                if visite[i]==True:
+                    l.append(i)
+            self.cc.append(l)
+        return set(map(frozenset,self.cc))
+
+    def explore(self,visite,v):
+        visite[v]=True
+        for u in self.graph[v]:
+            if not visite[u[0]]:
+                self.explore(visite,u[0])
 
     # def connected_components_set(self):
+
     #     """
     #     The result should be a set of frozensets (one per component), 
     #     For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
     #     """
+
     #     return set(map(frozenset, self.connected_components()))
     
     # def min_power(self, src, dest):
@@ -83,7 +96,7 @@ print(g)
     #     Should return path, min_power. 
     #     """
     #     raise NotImplementedError
-
+    
 
 def graph_from_file(filename):
     """
@@ -113,7 +126,19 @@ def graph_from_file(filename):
         g.add_edge(L[2+3*i], L[3+3*i], int(L[4+3*i]))
     return g
 
- g=graph_from_file("/home/onyxia/work/ensae-prog23/input/network.00.in")
+
+# visite={}
+# for x in g.graph:
+#     visite[x]=[False]
 
 
+g = Graph()
+g.__init__([1,2,3])
+g.add_edge(1, 2, 10)
+g.add_edge(1,3,15)
+print(g)
 
+g=graph_from_file("/home/onyxia/work/ensae-prog23/input/network.01.in")
+print(g.graph)
+g.connected_components()
+print(g.cc)
