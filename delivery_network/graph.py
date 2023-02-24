@@ -71,18 +71,18 @@ print(g)
 #         raise NotImplementedError
 
 
-#     def connected_components_set(self):
-#         """
-#         The result should be a set of frozensets (one per component), 
-#         For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
-#         """
-#         return set(map(frozenset, self.connected_components()))
+    # def connected_components_set(self):
+    #     """
+    #     The result should be a set of frozensets (one per component), 
+    #     For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
+    #     """
+    #     return set(map(frozenset, self.connected_components()))
     
-#     def min_power(self, src, dest):
-#         """
-#         Should return path, min_power. 
-#         """
-#         raise NotImplementedError
+    # def min_power(self, src, dest):
+    #     """
+    #     Should return path, min_power. 
+    #     """
+    #     raise NotImplementedError
 
 
 def graph_from_file(filename):
@@ -105,4 +105,15 @@ def graph_from_file(filename):
     G: Graph
         An object of the class Graph with the graph from file_name.
     """
-    raise NotImplementedError
+    fichier=open(filename,"r")
+    L=str(fichier.read().replace("\n"," ")).split()
+    g=Graph()
+    g.__init__(sorted(set([L[2+3*i] for i in range(len(L)//3)]+[L[3+3*i] for i in range(len(L)//3)])))
+    for i in range(len(L)//3):
+        g.add_edge(L[2+3*i], L[3+3*i], int(L[4+3*i]))
+    return g
+
+ g=graph_from_file("/home/onyxia/work/ensae-prog23/input/network.00.in")
+
+
+
