@@ -58,8 +58,9 @@ class Graph:
         self.graph[node1].append([node2, power_min, dist])
         self.graph[node2].append([node1, power_min, dist])
 
-    # def get_path_with_power(self, src, dest, power):
-    #     raise NotImplementedError
+    def get_path_with_power(self, src, dest, power):
+
+        raise NotImplementedError
 
     def connected_components_set(self):
         """
@@ -86,12 +87,10 @@ class Graph:
                 self.explore(visite,u[0])
 
     # def connected_components_set(self):
-
     #     """
     #     The result should be a set of frozensets (one per component), 
     #     For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
     #     """
-
     #     return set(map(frozenset, self.connected_components()))
     
     # def min_power(self, src, dest):
@@ -100,7 +99,6 @@ class Graph:
     #     """
     #     raise NotImplementedError
     
-
 def graph_from_file(filename):
     """
     Reads a text file and returns the graph as an object of the Graph class.
@@ -136,16 +134,14 @@ def graph_from_file(filename):
             g.add_edge(int(node[0]), int(node[1]), int(node[2]), int(node[3]))
         return g
 
-# visite={}
-# for x in g.graph:
-#     visite[x]=[False]
+# g = Graph()
+# g.__init__([1, 2, 3])
+# g.add_edge(1, 2, 10)
+# g.add_edge(1, 3, 15)
+# print(g)
 
-
-g = Graph()
-g.__init__([1, 2, 3])
-g.add_edge(1, 2, 10)
-g.add_edge(1, 3, 15)
+g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.01.in")
 print(g)
+a=g.connected_components_set()
+print()
 
-g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.00.in")
-print(g)
