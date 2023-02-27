@@ -55,20 +55,23 @@ class Graph:
             Distance between node1 and node2 on the edge. Default is 1.
         """
         self.nb_edges += 1
-        self.graph[node1].append([node2,power_min])
-        self.graph[node2].append([node1,power_min])
-
+        self.graph[node1].append([node2, power_min, dist])
+        self.graph[node2].append([node1, power_min, dist])
 
     # def get_path_with_power(self, src, dest, power):
     #     raise NotImplementedError
 
-    def connected_components(self):
+    def connected_components_set(self):
+        """
+         The result should be a set of frozensets (one per component), 
+         For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
+         """
         visite={}
-        for x in self.nodes:
-            visite[x]=False
         self.cc=[]
         for y in self.nodes:
             l=[]
+            for x in self.nodes:
+                visite[x]=False
             self.explore(visite,y)
             for i in visite:
                 if visite[i]==True:
@@ -118,14 +121,20 @@ def graph_from_file(filename):
     G: Graph
         An object of the class Graph with the graph from file_name.
     """
-    fichier=open(filename,"r")
-    L=str(fichier.read().replace("\n"," ")).split()
-    g=Graph()
-    g.__init__(sorted(set([L[2+3*i] for i in range(len(L)//3)]+[L[3+3*i] for i in range(len(L)//3)])))
-    for i in range(len(L)//3):
-        g.add_edge(L[2+3*i], L[3+3*i], int(L[4+3*i]))
-    return g
-
+    fichier = open(filename, "r")
+    L1 = fichier.read().replace(" ", ",").split()
+    L2 = [x.replace(",", " ").split() for x in L1]
+    g = Graph()
+    g.__init__([i+1 for i in range(int(L2[0][0]))])
+    L2.pop(0)
+    if len(L2[1]) == 3:
+        for node in L2:
+            g.add_edge(int(node[0]), int(node[1]), int(node[2]))
+        return g
+    else:
+        for node in L2:
+            g.add_edge(int(node[0]), int(node[1]), int(node[2]), int(node[3]))
+        return g
 
 # visite={}
 # for x in g.graph:
@@ -133,12 +142,10 @@ def graph_from_file(filename):
 
 
 g = Graph()
-g.__init__([1,2,3])
+g.__init__([1, 2, 3])
 g.add_edge(1, 2, 10)
-g.add_edge(1,3,15)
+g.add_edge(1, 3, 15)
 print(g)
 
-g=graph_from_file("/home/onyxia/work/ensae-prog23/input/network.01.in")
-print(g.graph)
-g.connected_components()
-print(g.cc)
+g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.00.in")
+print(g)
