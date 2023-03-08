@@ -61,29 +61,43 @@ class Graph:
     def get_path_with_power(self, src, dest, power):
         raise NotImplementedError
 
+    # def connected_components_set(self):
+    #     """
+    #      The result should be a set of frozensets (one per component), 
+    #      For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
+    #      """
+    #     visite = {}
+    #     self.connected_components = []
+    #     for node1 in self.nodes:
+    #         sous_liste = []
+    #         for node2 in self.nodes:
+    #             visite[node2] = False
+    #         self.explore(visite, node1)
+    #         for node in visite:
+    #             if visite[node] == True:
+    #                 sous_liste.append(node)
+    #         self.connected_components.append(sous_liste)
+    #     return set(map(frozenset, self.connected_components))
+
     def connected_components_set(self):
         """
          The result should be a set of frozensets (one per component), 
          For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
          """
-        visite = {}
         self.connected_components = []
-        for node1 in self.nodes:
+        for nodes in self.nodes:
             sous_liste = []
-            for node2 in self.nodes:
-                visite[node2] = False
-            self.explore(visite, node1)
-            for node in visite:
-                if visite[node] == True:
-                    sous_liste.append(node)
+            visite = [False]*(self.nb_nodes+1)
+            self.explore(visite, sous_liste, nodes)
             self.connected_components.append(sous_liste)
         return set(map(frozenset, self.connected_components))
 
-    def explore(self, visite, node):
+    def explore(self, visite, sous_liste, node):
         visite[node] = True
         for nodes in self.graph[node]:
+            sous_liste.append(nodes[0])
             if not visite[nodes[0]]:
-                self.explore(visite, nodes[0])
+                self.explore(visite, sous_liste, nodes[0])
 
     # def connected_components_set(self):
     #     """
