@@ -79,11 +79,11 @@ class Graph:
             self.connected_components.append(sous_liste)
         return set(map(frozenset, self.connected_components))
 
-    def explore(self, visite, v):
-        visite[v] = True
-        for u in self.graph[v]:
-            if not visite[u[0]]:
-                self.explore(visite, u[0])
+    def explore(self, visite, node):
+        visite[node] = True
+        for nodes in self.graph[node]:
+            if not visite[nodes[0]]:
+                self.explore(visite, nodes[0])
 
     # def connected_components_set(self):
     #     """
