@@ -59,7 +59,6 @@ class Graph:
         self.graph[node2].append([node1, power_min, dist])
 
     def get_path_with_power(self, src, dest, power):
-
         raise NotImplementedError
 
     def connected_components_set(self):
@@ -124,13 +123,12 @@ def graph_from_file(filename):
     L2 = [x.replace(",", " ").split() for x in L1]
     g = Graph()
     g.__init__([i+1 for i in range(int(L2[0][0]))])
-    L2.pop(0)
     if len(L2[1]) == 3:
-        for node in L2:
+        for node in L2[1:]:
             g.add_edge(int(node[0]), int(node[1]), int(node[2]))
         return g
     else:
-        for node in L2:
+        for node in L2[1:]:
             g.add_edge(int(node[0]), int(node[1]), int(node[2]), int(node[3]))
         return g
 
@@ -143,5 +141,5 @@ def graph_from_file(filename):
 g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.01.in")
 print(g)
 a=g.connected_components_set()
-print()
+print(a)
 
