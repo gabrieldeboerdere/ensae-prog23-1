@@ -77,7 +77,7 @@ class Graph:
                 if visite[node] == True:
                     sous_liste.append(node)
             self.connected_components.append(sous_liste)
-        return set(map(frozenset, self.cc))
+        return set(map(frozenset, self.connected_components))
 
     def explore(self, visite, v):
         visite[v] = True
