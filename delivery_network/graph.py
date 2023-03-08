@@ -66,24 +66,24 @@ class Graph:
          The result should be a set of frozensets (one per component), 
          For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
          """
-        visite={}
-        self.cc=[]
-        for y in self.nodes:
-            l=[]
-            for x in self.nodes:
-                visite[x]=False
-            self.explore(visite,y)
-            for i in visite:
-                if visite[i]==True:
-                    l.append(i)
-            self.cc.append(l)
-        return set(map(frozenset,self.cc))
+        visite = {}
+        self.connected_components = []
+        for node1 in self.nodes:
+            sous_liste = []
+            for node2 in self.nodes:
+                visite[node2] = False
+            self.explore(visite, node1)
+            for node in visite:
+                if visite[node] == True:
+                    sous_liste.append(node)
+            self.connected_components.append(sous_liste)
+        return set(map(frozenset, self.cc))
 
-    def explore(self,visite,v):
-        visite[v]=True
+    def explore(self, visite, v):
+        visite[v] = True
         for u in self.graph[v]:
             if not visite[u[0]]:
-                self.explore(visite,u[0])
+                self.explore(visite, u[0])
 
     # def connected_components_set(self):
     #     """
