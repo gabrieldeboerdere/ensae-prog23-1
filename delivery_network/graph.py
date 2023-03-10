@@ -61,16 +61,20 @@ class Graph:
         self.graph[node2].append([node1, power_min, dist])
 
     def get_path_with_power(self, src, dest, power):
+        all_path = []
+        for chemin in self.chemins_p(src, dest, power):
+            all_path.append(chemin)
+        if all_path == []:
+            return None
+        else:
+            return all_path
+
+    def chemins_p(self, src, dest, power):
         stack = deque()
-        print(stack)
         stack.append((src, [src]))
-        print(stack)
         while stack:
             (node, path) = stack.pop()
-            nodes_adj = [n[0] for n in self.graph[node] if n[0] not in path]
-            print(node)
-            print(path)
-            print(nodes_adj)
+            nodes_adj = [n[0] for n in self.graph[node] if n[0] not in path and power >= n[1]]
             for node_adj in nodes_adj:
                 if node_adj == dest:
                     yield path + [node_adj]
@@ -123,11 +127,32 @@ class Graph:
     #     """
     #     return set(map(frozenset, self.connected_components()))
     
-    # def min_power(self, src, dest):
-    #     """
-    #     Should return path, min_power. 
-    #     """
-    #     raise NotImplementedError
+    def min_power(self, src, dest):
+        """
+        Should return path, min_power. 
+        """
+        max_power = 0
+        for node in self.nodes:
+            for i in range(len(self.graph[node])):
+                if self.graph[node][i][1]>max_power:
+                    max_power=self.graph[node][i][1]
+        print(max_power)
+        all_path = []
+        for chemin in self.chemins_sp(src, dest):
+            all_path.append(chemin)
+        return all_path
+
+    def chemins_sp(self, src, dest):
+        stack = deque()
+        stack.append((src, [src]))
+        while stack:
+            (node, path) = stack.pop()
+            nodes_adj = [n[0] for n in self.graph[node] if n[0] not in path]
+            for node_adj in nodes_adj:
+                if node_adj == dest:
+                    yield path + [node_adj]
+                else:
+                    stack.append((node_adj, path + [node_adj]))    
     
 def graph_from_file(filename):
     """
@@ -169,9 +194,9 @@ def graph_from_file(filename):
 # g.add_edge(1, 3, 15)
 # print(g)
 
-g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.01.in")
+g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.04.in")
 print(g)
 a=g.connected_components_set()
 print(a)
-for i in g.get_path_with_power(1, 3, 10):
-    print(i)
+print(g.get_path_with_power(1, 4, 100))
+print(g.min_power(1, 4))
