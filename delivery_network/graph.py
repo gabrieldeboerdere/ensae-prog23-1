@@ -1,3 +1,5 @@
+from collections import deque
+
 class Graph:
     """
     A class representing graphs as adjacency lists and implementing various algorithms on the graphs. Graphs in the class are not oriented. 
@@ -59,7 +61,22 @@ class Graph:
         self.graph[node2].append([node1, power_min, dist])
 
     def get_path_with_power(self, src, dest, power):
-        raise NotImplementedError
+        stack = deque()
+        print(stack)
+        stack.append((src, [src]))
+        print(stack)
+        while stack:
+            (node, path) = stack.pop()
+            nodes_adj = [n[0] for n in self.graph[node] if n[0] not in path]
+            print(node)
+            print(path)
+            print(nodes_adj)
+            for node_adj in nodes_adj:
+                if node_adj == dest:
+                    yield path + [node_adj]
+                else:
+                    stack.append((node_adj, path + [node_adj]))
+
 
     # def connected_components_set(self):
     #     """
@@ -156,4 +173,5 @@ g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.01.in")
 print(g)
 a=g.connected_components_set()
 print(a)
-
+for i in g.get_path_with_power(1, 3, 10):
+    print(i)
