@@ -1,0 +1,10 @@
+digraph G {
+	1 -> 4 [label="p : 11"]
+	1 -> 2 [label="p : 4"]
+	2 -> 3 [label="p : 4"]
+	2 -> 1 [label="p : 4"]
+	3 -> 2 [label="p : 4"]
+	3 -> 4 [label="p : 4"]
+	4 -> 3 [label="p : 4"]
+	4 -> 1 [label="p : 11"]
+}

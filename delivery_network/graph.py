@@ -1,4 +1,5 @@
 from collections import deque
+import graphviz
 
 class Graph:
     """
@@ -80,25 +81,6 @@ class Graph:
                 else:
                     stack.append((node_adj, path + [node_adj]))
 
-
-    # def connected_components_set(self):
-    #     """
-    #      The result should be a set of frozensets (one per component), 
-    #      For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
-    #      """
-    #     visite = {}
-    #     self.connected_components = []
-    #     for node1 in self.nodes:
-    #         sous_liste = []
-    #         for node2 in self.nodes:
-    #             visite[node2] = False
-    #         self.explore(visite, node1)
-    #         for node in visite:
-    #             if visite[node] == True:
-    #                 sous_liste.append(node)
-    #         self.connected_components.append(sous_liste)
-    #     return set(map(frozenset, self.connected_components))
-
     def connected_components_set(self):
         """
          The result should be a set of frozensets (one per component), 
@@ -119,13 +101,6 @@ class Graph:
             if not visite[nodes[0]]:
                 self.explore(visite, sous_liste, nodes[0])
 
-    # def connected_components_set(self):
-    #     """
-    #     The result should be a set of frozensets (one per component), 
-    #     For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
-    #     """
-    #     return set(map(frozenset, self.connected_components()))
-    
     def min_power(self, src, dest):
         """
         Should return path, min_power. 
@@ -146,20 +121,16 @@ class Graph:
             else:
                 min_power = (max_power + min_power)/2
         return (self.get_path_with_power(src, dest, max_power), int(max_power))
-        #all_path = []
-        #for chemin in self.chemins(src, dest, max_power):
-            #all_path.append(chemin)
-            #all_path_power = []
-        #for path in all_path:
-            #min_power = max_power
-            #for i in range(len(path)-1):
-                #for etape in self.graph[path[i]]:
-                    #if etape[0] == path[i+1] and etape[1] < max_power:
-                        #min_power = etape[1]
-            #path_power = (path, min_power)
-            #all_path_power.append(path_power)
-        #return all_path_power
     
+    def representation_graph(self):
+        representation = graphviz.Digraph('G', filename='/home/onyxia/work/ensae-prog23-1/representation_graph.gv')
+        for node1 in self.nodes:
+            for node2 in self.graph[node1]:
+                representation.edge(str(node1), str(node2[0]), label='p : ' + str(node2[1]))
+        return representation.view()
+
+
+
 def graph_from_file(filename):
     """
     Reads a text file and returns the graph as an object of the Graph class.
@@ -194,14 +165,9 @@ def graph_from_file(filename):
             g.add_edge(int(node[0]), int(node[1]), int(node[2]), int(node[3]))
         return g
 
-# g = Graph()
-# g.__init__([1, 2, 3])
-# g.add_edge(1, 2, 10)
-# g.add_edge(1, 3, 15)
-# print(g)
-
 g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.04.in")
 print(g)
 a=g.connected_components_set()
 print(a)
 print(g.min_power(1, 3))
+g.representation_graph()
