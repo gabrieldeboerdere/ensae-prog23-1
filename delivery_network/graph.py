@@ -165,9 +165,9 @@ def graph_from_file(filename):
             g.add_edge(int(node[0]), int(node[1]), int(node[2]), int(node[3]))
         return g
 
-g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.1.in")
+g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.2.in")
 print(g)
-a=g.connected_components_set()
-print(a)
+#a=g.connected_components_set()
+#print(a)
 #print(g.min_power(1, 3))
 g.representation_graph()
