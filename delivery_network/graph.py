@@ -66,8 +66,7 @@ class Graph:
             all_path.append(chemin)
         if all_path == []:
             return None
-        else:
-            return all_path
+        return all_path
 
     def chemins(self, src, dest, power):
         stack = deque()
@@ -136,19 +135,30 @@ class Graph:
             for i in range(len(self.graph[node])):
                 if self.graph[node][i][1] > max_power:
                     max_power = self.graph[node][i][1]
-        all_path = []
-        for chemin in self.chemins(src, dest, max_power):
-            all_path.append(chemin)
-            all_path_power = []
-        for path in all_path:
-            min_power = max_power
-            for i in range(len(path)-1):
-                for etape in self.graph[path[i]]:
-                    if etape[0] == path[i+1] and etape[1] < max_power:
-                        min_power = etape[1]
-            path_power = (path, min_power)
-            all_path_power.append(path_power)
-        return all_path_power
+        if self.get_path_with_power(src, dest, max_power) == None:
+            return None
+        min_power = 0
+        eps = 0.9
+        while max_power - min_power > eps:
+            a = self.get_path_with_power(src, dest, (max_power + min_power)/2)
+            if a != None:
+                max_power = (max_power + min_power)/2 
+            else:
+                min_power = (max_power + min_power)/2
+        return (self.get_path_with_power(src, dest, max_power), int(max_power))
+        #all_path = []
+        #for chemin in self.chemins(src, dest, max_power):
+            #all_path.append(chemin)
+            #all_path_power = []
+        #for path in all_path:
+            #min_power = max_power
+            #for i in range(len(path)-1):
+                #for etape in self.graph[path[i]]:
+                    #if etape[0] == path[i+1] and etape[1] < max_power:
+                        #min_power = etape[1]
+            #path_power = (path, min_power)
+            #all_path_power.append(path_power)
+        #return all_path_power
     
 def graph_from_file(filename):
     """
@@ -194,5 +204,4 @@ g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.04.in")
 print(g)
 a=g.connected_components_set()
 print(a)
-print(g.get_path_with_power(1, 4, 4))
-print(g.min_power(1, 4))
+print(g.min_power(1, 3))
