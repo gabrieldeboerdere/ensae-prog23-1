@@ -126,7 +126,7 @@ class Graph:
         representation = graphviz.Digraph('G', filename='/home/onyxia/work/ensae-prog23-1/representation_graph.gv')
         for node1 in self.nodes:
             for node2 in self.graph[node1]:
-                representation.edge(str(node1), str(node2[0]), label='p : ' + str(node2[1]))
+                representation.edge(str(node1), str(node2[0]), label='p = ' + str(node2[1]) + ',d = ' + str(node2[2]))
         return representation.view()
 
 
