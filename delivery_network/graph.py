@@ -61,10 +61,16 @@ class Graph:
         self.graph[node1].append([node2, power_min, dist])
         self.graph[node2].append([node1, power_min, dist])
 
+    # def get_path_with_power(self, src, dest, power):
+    #     all_path = []
+    #     for chemin in self.chemins(src, dest, power):
+    #         all_path.append(chemin)
+    #     if all_path == []:
+    #         return None
+    #     return all_path
+
     def get_path_with_power(self, src, dest, power):
-        all_path = []
-        for chemin in self.chemins(src, dest, power):
-            all_path.append(chemin)
+        all_path = list(self.chemins(src, dest, power))
         if all_path == []:
             return None
         return all_path
@@ -165,9 +171,10 @@ def graph_from_file(filename):
             g.add_edge(int(node[0]), int(node[1]), int(node[2]), int(node[3]))
         return g
 
-g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.2.in")
+g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.01.in")
 print(g)
-#a=g.connected_components_set()
-#print(a)
+a=g.connected_components_set()
+print(a)
+print(g.get_path_with_power(1, 3, 1))
 #print(g.min_power(1, 3))
-g.representation_graph()
+#g.representation_graph()
