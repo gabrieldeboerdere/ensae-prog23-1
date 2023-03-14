@@ -70,22 +70,43 @@ class Graph:
     #     return all_path
 
     def get_path_with_power(self, src, dest, power):
-        all_path = list(self.chemins(src, dest, power))
+        verif = []
+        for connected_component in self.connected_components_set():
+            if connected_component.issuperset({1,3}):
+                verif += [True]
+        if verif == len(verif)*[False]:
+            return None
+        all_path = self.chemins(src, dest, power)
         if all_path == []:
             return None
+        elif len(all_path) == 1:
+            return all_path[0]
         return all_path
 
+    # def chemins(self, src, dest, power):
+    #     stack = deque()
+    #     stack.append((src, [src]))
+    #     while stack:
+    #         (node, path) = stack.pop()
+    #         nodes_adj = [n[0] for n in self.graph[node] if n[0] not in path and power >= n[1]]
+    #         for node_adj in nodes_adj:
+    #             if node_adj == dest:
+    #                 yield path + [node_adj]
+    #             else:
+    #                 stack.append((node_adj, path + [node_adj]))
+
     def chemins(self, src, dest, power):
-        stack = deque()
-        stack.append((src, [src]))
-        while stack:
-            (node, path) = stack.pop()
-            nodes_adj = [n[0] for n in self.graph[node] if n[0] not in path and power >= n[1]]
+        all_path = []
+        pile = [(src, [src])]
+        path = []
+        while len(pile) != 0:
+            nodes, path = pile.pop()
+            nodes_adj = [n[0] for n in self.graph[nodes] if (n[0] not in path) and (power >= n[1])]
             for node_adj in nodes_adj:
                 if node_adj == dest:
-                    yield path + [node_adj]
-                else:
-                    stack.append((node_adj, path + [node_adj]))
+                    all_path.append(path + [dest])
+                pile.append((node_adj, path + [node_adj]))
+        return all_path
 
     def connected_components_set(self):
         """
@@ -171,10 +192,18 @@ def graph_from_file(filename):
             g.add_edge(int(node[0]), int(node[1]), int(node[2]), int(node[3]))
         return g
 
-g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.01.in")
+g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.1.in")
 print(g)
-a=g.connected_components_set()
+a = g.connected_components_set()
 print(a)
-print(g.get_path_with_power(1, 3, 1))
-#print(g.min_power(1, 3))
+b = g.get_path_with_power(1, 20, 30)
+print(len(b))
+
+resultantList = []
+for element in b:
+    if element not in resultantList:
+        resultantList.append(element)
+print(len(resultantList))
+
+print(g.min_power(1, 3))
 #g.representation_graph()
