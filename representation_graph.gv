@@ -1,4 +1,4 @@
-digraph G {
+strict digraph G {
 	1 [color=green]
 	4 [color=red]
 	1 -> 4

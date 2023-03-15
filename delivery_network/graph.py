@@ -149,7 +149,7 @@ class Graph:
         return (self.get_path_with_power(src, dest, max_power), int(max_power))
     
     def representation_graph(self, filname, src, dest):
-        representation = graphviz.Digraph('G', filename='/home/onyxia/work/ensae-prog23/representation_graph.gv')
+        representation = graphviz.Digraph('G', filename='/home/onyxia/work/ensae-prog23/representation_graph.gv', strict = True)
         representation.node(str(src), color = 'green')
         representation.node(str(dest), color = 'red')
         for node1 in self.nodes:
