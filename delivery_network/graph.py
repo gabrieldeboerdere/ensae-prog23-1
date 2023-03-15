@@ -150,7 +150,6 @@ class Graph:
     
     def representation_graph(self, filname, src, dest):
         representation = graphviz.Digraph('G', filename='/home/onyxia/work/ensae-prog23/representation_graph.gv', strict = True)
-        representation.attr( size='8,5')
         representation.node(str(src), color = 'green')
         representation.node(str(dest), color = 'red')
         for node1 in self.nodes:
