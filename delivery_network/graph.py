@@ -148,16 +148,18 @@ class Graph:
                 min_power = (max_power + min_power)/2
         return (self.get_path_with_power(src, dest, max_power), int(max_power))
     
-    def representation_graph(self, src, dest):
+    def representation_graph(self, filname, src, dest):
         representation = graphviz.Digraph('G', filename='/home/onyxia/work/ensae-prog23/representation_graph.gv')
         representation.node(str(src), color = 'green')
         representation.node(str(dest), color = 'red')
         for node1 in self.nodes:
             for node2 in self.graph[node1]:
-                representation.edge(str(node1), str(node2[0]), label='p = ' + str(node2[1]) + ',d = ' + str(node2[2]))
-        path = self.min_power(src, dest)[0]
+                representation.edge(str(node1), str(node2[0]))
+        path, power = self.min_power(src, dest)
         for i in range(len(path)-1):
-            representation.edge(str(path[i]), str(path[i+1]), label = 'min power path', color = 'blue')
+            representation.edge(str(path[i]), str(path[i+1]), color = 'blue')
+        representation.attr(label='graph de' + filname + '\npuissance minimale: ' + str(power))
+        representation.attr(fontsize='20')
         return representation.view()
 
 
@@ -182,7 +184,7 @@ def graph_from_file(filename):
     G: Graph
         An object of the class Graph with the graph from file_name.
     """
-    fichier = open(filename, "r")
+    fichier = open("/home/onyxia/work/ensae-prog23/input/" + filename, "r")
     L1 = fichier.read().replace(" ", ",").split()
     L2 = [x.replace(",", " ").split() for x in L1]
     g = Graph()
@@ -196,7 +198,7 @@ def graph_from_file(filename):
             g.add_edge(int(node[0]), int(node[1]), int(node[2]), int(node[3]))
         return g
 
-g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.04.in")
+g = graph_from_file("network.04.in")
 print(g)
 a = g.connected_components_set()
 print(a)
@@ -210,4 +212,4 @@ for element in b:
 print(len(resultantList))
 
 print(g.min_power(1, 4))
-g.representation_graph(1, 4)
+g.representation_graph("network.04.in", 1, 4)
