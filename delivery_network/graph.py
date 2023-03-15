@@ -72,7 +72,7 @@ class Graph:
     def get_path_with_power(self, src, dest, power):
         verif = []
         for connected_component in self.connected_components_set():
-            if connected_component.issuperset({1,3}):
+            if connected_component.issuperset({src,dest}):
                 verif += [True]
         if verif == len(verif)*[False]:
             return None
@@ -98,7 +98,6 @@ class Graph:
     def chemins(self, src, dest, power):
         all_path = []
         pile = [(src, [src])]
-        path = []
         while len(pile) != 0:
             nodes, path = pile.pop()
             nodes_adj = [n[0] for n in self.graph[nodes] if (n[0] not in path) and (power >= n[1])]
@@ -149,11 +148,16 @@ class Graph:
                 min_power = (max_power + min_power)/2
         return (self.get_path_with_power(src, dest, max_power), int(max_power))
     
-    def representation_graph(self):
-        representation = graphviz.Digraph('G', filename='/home/onyxia/work/ensae-prog23-1/representation_graph.gv')
+    def representation_graph(self, src, dest):
+        representation = graphviz.Digraph('G', filename='/home/onyxia/work/ensae-prog23/representation_graph.gv')
+        representation.node(str(src), color = 'green')
+        representation.node(str(dest), color = 'red')
         for node1 in self.nodes:
             for node2 in self.graph[node1]:
                 representation.edge(str(node1), str(node2[0]), label='p = ' + str(node2[1]) + ',d = ' + str(node2[2]))
+        path = self.min_power(src, dest)[0]
+        for i in range(len(path)-1):
+            representation.edge(str(path[i]), str(path[i+1]), label = 'min power path', color = 'blue')
         return representation.view()
 
 
@@ -192,11 +196,11 @@ def graph_from_file(filename):
             g.add_edge(int(node[0]), int(node[1]), int(node[2]), int(node[3]))
         return g
 
-g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.1.in")
+g = graph_from_file("/home/onyxia/work/ensae-prog23/input/network.04.in")
 print(g)
 a = g.connected_components_set()
 print(a)
-b = g.get_path_with_power(1, 20, 30)
+b = g.get_path_with_power(1, 3, 30)
 print(len(b))
 
 resultantList = []
@@ -205,5 +209,5 @@ for element in b:
         resultantList.append(element)
 print(len(resultantList))
 
-print(g.min_power(1, 3))
-#g.representation_graph()
+print(g.min_power(1, 4))
+g.representation_graph(1, 4)
