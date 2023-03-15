@@ -1,4 +1,5 @@
 strict digraph G {
+	size="8,5"
 	1 [color=green]
 	4 [color=red]
 	1 -> 4
