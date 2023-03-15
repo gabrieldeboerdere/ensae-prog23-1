@@ -69,20 +69,16 @@ class Graph:
                 component = composante
         if chemin_realisable == False:
             return None
-        all_path = []
+        path = []
         pile = [(src, [src])]
         while len(pile) != 0:
             nodes, path = pile.pop()
             nodes_adj = [n[0] for n in self.graph[nodes] if (n[0] not in path) and (power >= n[1])]
             for node_adj in nodes_adj:
-                if node_adj == dest and not (path + [dest] in all_path):
-                    all_path.append(path + [dest])
+                if node_adj == dest:
+                    return path + [dest]
                 pile.append((node_adj, path + [node_adj]))
-        if all_path == []:
-            return None
-        elif len(all_path) == 1:
-            return all_path[0]
-        return all_path
+        return None
 
     def connected_components_set(self):
         """
@@ -172,11 +168,11 @@ def graph_from_file(filename):
             g.add_edge(int(node[0]), int(node[1]), int(node[2]), int(node[3]))
         return g
 
-g = graph_from_file("input/network.04.in")
+g = graph_from_file("input/network.1.in")
 print(g)
 a = g.connected_components_set()
 print(a)
-b = g.get_path_with_power(1, 4, 50)
+b = g.get_path_with_power(1, 20, 50)
 print(b)
 
 # resultantList = []
@@ -185,5 +181,5 @@ print(b)
 #         resultantList.append(element)
 # print(len(resultantList))
 
-print(g.min_power(1, 4))
+print(g.min_power(1, 20))
 #g.representation_graph("input/network.1.in", 1, 4)
