@@ -12,7 +12,6 @@ digraph G {
 	1 -> 2 [color=blue]
 	2 -> 3 [color=blue]
 	3 -> 4 [color=blue]
-	label="graph denetwork.04.in
-puissance minimale: 4"
-	fontsize=20
+	label="Graph de network.04.in
+puissance minimal requise pour aller de 1 à 4 : 4"
 }

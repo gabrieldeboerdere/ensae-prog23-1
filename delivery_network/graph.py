@@ -158,8 +158,7 @@ class Graph:
         path, power = self.min_power(src, dest)
         for i in range(len(path)-1):
             representation.edge(str(path[i]), str(path[i+1]), color = 'blue')
-        representation.attr(label='graph de' + filname + '\npuissance minimale: ' + str(power))
-        representation.attr(fontsize='20')
+        representation.attr(label='Graph de ' + filname + '\npuissance minimal requise pour aller de ' + str(src) + ' à ' + str(dest) + ' : ' + str(power))
         return representation.view()
 
 
