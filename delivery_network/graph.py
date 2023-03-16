@@ -120,8 +120,8 @@ class Graph:
                 min_power = (max_power + min_power)/2
         return (self.get_path_with_power(src, dest, max_power), int(max_power))
     
-    def representation_graph(self, filname1, filename2, src, dest):
-        representation = graphviz.Digraph('G', filename2, strict = True)
+    def representation_graph(self, filname, src, dest):
+        representation = graphviz.Digraph('G', filename = '/home/onyxia/work/ensae-prog23/representation_graph.gv', strict = True)
         representation.node(str(src), color = 'green')
         representation.node(str(dest), color = 'red')
         for node1 in self.nodes:
@@ -130,7 +130,7 @@ class Graph:
         path, power = self.min_power(src, dest)
         for i in range(len(path)-1):
             representation.edge(str(path[i]), str(path[i+1]), color = 'blue')
-        representation.attr(label='Graph de ' + filname1 + '\npuissance minimal requise pour aller de ' + str(src) + ' à ' + str(dest) + ' : ' + str(power))
+        representation.attr(label='Graph de ' + filname + '\npuissance minimal requise pour aller de ' + str(src) + ' à ' + str(dest) + ' : ' + str(power))
         return representation.view()
 
     def kruskal(self):

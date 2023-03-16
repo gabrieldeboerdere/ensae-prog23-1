@@ -12,9 +12,9 @@ print(a)
 # print(b)
 k = g.kruskal()
 print(k)
-k.representation_graph("input/network.1.in",'/home/onyxia/work/ensae-prog23/representation_graph_kruskal.gv', 1, 3)
+k.representation_graph("input/network.1.in", 1, 3)
 # print(g.min_power(1, 20))
-g.representation_graph("input/network.1.in",'/home/onyxia/work/ensae-prog23/representation_graph_graph_network1.gv', 1, 4)
+g.representation_graph("input/network.1.in", 1, 4)
 
 ###  QUESTION 10  ###
 # S1 = 0
