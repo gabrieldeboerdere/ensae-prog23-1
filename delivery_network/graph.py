@@ -197,3 +197,14 @@ def routes_extract(filename):
     L1 = fichier.read().replace(" ", ",").split()
     L2 = [x.replace(",", " ").split() for x in L1]
     return(L2)
+
+
+g = graph_from_file("input/network.1.in")
+print(g)
+cc = g.connected_components_set()
+print(cc)
+path = g.get_path_with_power(1, 20, 50)
+print(path)
+k = g.kruskal()
+print(k)
+k.representation_graph("input/network.1.in", 1, 20)

@@ -1,5 +1,6 @@
 import graph as gr
 import time 
+import graphviz
 
 data_path = "input/"
 file_name = "network.01.in"
@@ -8,13 +9,13 @@ g = gr.graph_from_file("input/network.1.in")
 print(g)
 a = g.connected_components_set()
 print(a)
-# b = g.get_path_with_power(1, 20, 50)
-# print(b)
+b = g.get_path_with_power(1, 20, 50)
+print(b)
 k = g.kruskal()
 print(k)
-k.representation_graph("input/network.1.in", 1, 3)
-# print(g.min_power(1, 20))
-g.representation_graph("input/network.1.in", 1, 4)
+k.representation_graph("input/network.1.in", 1, 20)
+print(g.min_power(1, 20))
+#g.representation_graph("input/network.1.in", 1, 4)
 
 ###  QUESTION 10  ###
 # S1 = 0
