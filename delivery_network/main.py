@@ -13,7 +13,7 @@ b = g.get_path_with_power(1, 20, 50)
 print(b)
 k = g.kruskal()
 print(k)
-k.representation_graph("input/network.1.in", 1, 20)
+# k.representation_graph("input/network.1.in", 1, 20)
 print(g.min_power(1, 20))
 #g.representation_graph("input/network.1.in", 1, 4)
 
