@@ -160,13 +160,13 @@ class Graph:
             for edge in self.graph[node1]:
                 node2, p, d = edge
                 if not ((node1, node2) in edges_visites):
-                    weigth_edge_visites[(node1, node2)] = True
-                    weigth_edge_visites[(node2, node1)] = True
-                    weigth_edge.append((node1, node2, p, d))
-        weigth_edge.sort(key=lambda x: x[2])
+                    edges_visites[(node1, node2)] = True
+                    edges_visites[(node2, node1)] = True
+                    weight_edge.append((node1, node2, p, d))
+        weight_edge.sort(key=lambda x: x[2])
         G = Graph(self.nodes)
         connected = {n: [n] for n in self.nodes}
-        for edge in weigth_edge:
+        for edge in weight_edge:
             node1, node2, p, d = edge
             if not (connected[node1][0] == connected[node2][0]):
                 G.add_edge(node1, node2, p, d)
