@@ -1,6 +1,6 @@
 from collections import deque
 import graphviz
-
+import time
 class Graph:
     """
     A class representing graphs as adjacency lists and implementing various algorithms on the graphs. Graphs in the class are not oriented. 
@@ -134,6 +134,35 @@ class Graph:
         representation.attr(label='Graph de ' + filname + '\npuissance minimal requise pour aller de ' + str(src) + ' à ' + str(dest) + ' : ' + str(power))
         return representation.view()
 
+    def kruskal(self):
+        edges_visites = {}
+        edges = []
+        for node1 in self.nodes:
+            for edge in self.graph[node1]:
+                node2,p,d = edge
+                if not ((node1,node2) in edges_visites):
+                    edges_visites[(node1, node2)] = True
+                    edges_visites[(node2, node1)] = True
+                    edges.append((node1, node2, p, d))
+        edges.sort(key = lambda a : a[2])
+
+        nb_edges_G = 0
+        G = Graph(self.nodes)
+        connected = {n : [n] for n in self.nodes}
+
+        for edge in edges: 
+            node1, node2, p, d = edge
+            if not (connected[node1][0] == connected[node2][0]):
+                G.add_edge(node1, node2, p, d)
+                nb_edges_G += 1
+                for node3 in connected[node2]:
+                    connected[node1].append(node3)
+                    connected[node3] = connected[node1]
+                
+            if G.nb_edges == G.nb_nodes - 1:
+                break
+        return G
+
 def graph_from_file(filename):
     """
     Reads a text file and returns the graph as an object of the Graph class.
@@ -168,18 +197,42 @@ def graph_from_file(filename):
             g.add_edge(int(node[0]), int(node[1]), int(node[2]), int(node[3]))
         return g
 
-g = graph_from_file("input/network.1.in")
+g = graph_from_file("input/network.01.in")
 print(g)
 a = g.connected_components_set()
 print(a)
 b = g.get_path_with_power(1, 20, 50)
 print(b)
 
+k = g.kruskal()
+print(k)
+k.representation_graph("input/network.01.in", 1, 3)
 # resultantList = []
 # for element in b:
 #     if element not in resultantList:
 #         resultantList.append(element)
 # print(len(resultantList))
 
-print(g.min_power(1, 20))
+# print(g.min_power(1, 20))
 #g.representation_graph("input/network.1.in", 1, 4)
+
+def routes_extract(filename):
+    fichier = open("/home/onyxia/work/ensae-prog23/" + filename, "r")
+    L1 = fichier.read().replace(" ", ",").split()
+    L2 = [x.replace(",", " ").split() for x in L1]
+    return(L2)
+
+# S1 = 0
+# for i in range(1,11):
+#     S2=0
+#     L = routes_extract("input/routes." + str(i) + ".in")[1:]
+#     g = graph_from_file("input/network." +str(i) + ".in")
+#     for j in range(1):
+#         t0 = time.perf_counter()
+#         g.min_power(int(L[j][0]), int(L[j][1]))
+#         t1 = time.perf_counter()
+#         S2 += t1-t0
+#     S1 += S2/1
+# S1 += S1/10
+# print(S1)
+
