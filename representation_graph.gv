@@ -1,17 +1,46 @@
 strict digraph G {
 	1 [color=green]
-	4 [color=red]
-	1 -> 4
+	20 [color=red]
 	1 -> 2
-	2 -> 3
+	1 -> 5
+	1 -> 14
+	1 -> 8
 	2 -> 1
+	2 -> 3
+	2 -> 13
+	2 -> 11
 	3 -> 2
-	3 -> 4
-	4 -> 3
-	4 -> 1
-	1 -> 2 [color=blue]
-	2 -> 3 [color=blue]
-	3 -> 4 [color=blue]
-	label="Graph de network.04.in
-puissance minimal requise pour aller de 1 à 4 : 4"
+	4 -> 12
+	4 -> 8
+	4 -> 6
+	5 -> 1
+	6 -> 17
+	6 -> 4
+	7 -> 16
+	8 -> 4
+	8 -> 20
+	8 -> 1
+	9 -> 12
+	10 -> 16
+	11 -> 2
+	12 -> 4
+	12 -> 9
+	12 -> 16
+	13 -> 19
+	13 -> 2
+	14 -> 1
+	15 -> 19
+	16 -> 7
+	16 -> 12
+	16 -> 10
+	17 -> 18
+	17 -> 6
+	18 -> 17
+	19 -> 13
+	19 -> 15
+	20 -> 8
+	1 -> 8 [color=blue]
+	8 -> 20 [color=blue]
+	label="Graph de input/network.1.in
+puissance minimal requise pour aller de 1 à 20 : 13"
 }
