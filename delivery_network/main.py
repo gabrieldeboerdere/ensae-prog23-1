@@ -4,22 +4,24 @@ import graphviz
 from random import randint
 
 data_path = "input/"
-file_name = "network.1.in"
+file_name = "network.04.in"
 
 g = gr.graph_from_file(data_path + file_name)
 print(g)
 a = g.connected_components_set()
 print(a)
-# b = g.get_path_with_power(1, 20, 600)
-# print(b)
-c = g.get_path_with_power(1, 20, 50)
+print()
+b = g.get_path_with_power(1, 4, 4)
+print(b)
+print()
+c = g.get_path_with_power(1, 4, 11)
 print(c)
-# k = g.kruskal()
-# print(k)
-# d = k.connected_components_set()
-# print(d)
-g.representation_graph("input/network.1.in", 1, 20)
-# print(g.min_power(1, 20))
+print()
+k = g.kruskal()
+print(k)
+print(g.min_power(1, 4))
+g.representation_graph("input/network.04.in", 1, 4)
+
 # g.representation_graph("input/network.1.in", 1, 4)
 
 # QUESTION 10  #
