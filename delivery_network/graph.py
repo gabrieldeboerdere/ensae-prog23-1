@@ -1,9 +1,10 @@
 import graphviz
+import heapq
 
 class Graph:
     """
     A class representing graphs as adjacency lists and implementing various algorithms on the graphs. Graphs in the class are not oriented. 
-    Attributes: 
+    Attributes:
     -----------
     nodes: NodeType
         A list of nodes. Nodes can be of any immutable type, e.g., integer, float, or string.
@@ -15,13 +16,13 @@ class Graph:
     nb_nodes: int
         The number of nodes.
     nb_edges: int
-        The number of edges. 
+        The number of edges.
     """
 
     def __init__(self, nodes=[]):
         """
-        Initializes the graph with a set of nodes, and no edges. 
-        Parameters: 
+        Initializes the graph with a set of nodes, and no edges.
+        Parameters:
         -----------
         nodes: list, optional
             A list of nodes. Default is empty.
@@ -34,18 +35,18 @@ class Graph:
     def __str__(self):
         """Prints the graph as a list of neighbors for each node (one per line)"""
         if not self.graph:
-            output = "The graph is empty"            
+            output = "The graph is empty"
         else:
             output = f"The graph has {self.nb_nodes} nodes and {self.nb_edges} edges.\n"
             for source, destination in self.graph.items():
                 output += f"{source}-->{destination}\n"
         return output
-    
+
     def add_edge(self, node1, node2, power_min, dist=1):
         """
-        Adds an edge to the graph. Graphs are not oriented, hence an edge is added to the adjacency list of both end nodes. 
+        Adds an edge to the graph. Graphs are not oriented, hence an edge is added to the adjacency list of both end nodes.
 
-        Parameters: 
+        Parameters:
         -----------
         node1: NodeType
             First end (node) of the edge
@@ -56,102 +57,163 @@ class Graph:
         dist: numeric (int or float), optional
             Distance between node1 and node2 on the edge. Default is 1.
         """
+        # On ajoute la node1 si elle n'y est pas déja
         if node1 not in self.graph:
             self.graph[node1] = []
             self.nb_nodes += 1
             self.nodes.append(node1)
+        # On fait de même avec la node 2
         if node2 not in self.graph:
             self.graph[node2] = []
             self.nb_nodes += 1
             self.nodes.append(node2)
-        self.graph[node1].append([node2, power_min, dist]) 
+        # Pour chaque node on ajoute dans le graphe le trajet
+        self.graph[node1].append([node2, power_min, dist])
         self.graph[node2].append([node1, power_min, dist])
+        # Le nombre d'arrete augmente de 1
         self.nb_edges += 1
 
     def get_path_with_power(self, src, dest, power):
+        # On définit la distance de chaque node à +inf grâce à un dictionnaire
+        dist = {n: float('inf') for n in self.nodes}
+        # On définit les prédécesseurs de chaque node grâce à un dictionnaire
+        # (initialement égal à elle même)
+        pred = {n: None for n in self.nodes}
+        # On définit un ensemble visite pour
+        # ne pas repasser par les mêmes chemins
+        visite = set()
+        # heap est une liste de tuple de la forme (distance,node)
+        heap = [(0, src)]
+        # Distance de la source à elle-même
+        dist[src] = 0
+        # Parcours
+        while heap:
+            (d, node) = heapq.heappop(heap)
+            if node == dest:
+                # On a trouvé la destination, on construit le chemin
+                path = []
+                while pred[node]:
+                    path.append(node)
+                    node = pred[node]
+                path.append(src)
+                path.reverse()
+                return path
+            # On redéfinit la distance des voisins de la node
+            # en prenant les distances minimum
+            visite.add(node)
+            for voisin in self.graph[node]:
+                if voisin[0] in visite:
+                    continue
+                if voisin[1] > power:
+                    continue
+                alt = dist[node] + voisin[2]
+                if alt < dist[voisin[0]]:
+                    dist[voisin[0]] = alt
+                    pred[voisin[0]] = node
+                    heapq.heappush(heap, (alt, voisin[0]))
+        # Pas de chemin trouvé
+        return None
+
+    # Pour les petit graphe :
+
+    def connected_components_set_petit_graph(self):
         """
-        Should return a path reachable for the power given
-
-        Args:
-            src (NodeType): beggining of the path
-            dest (NodeType): end of the path
-            power (numeric (int or float)): maximal power given to travel between nodes
-
-        Returns:
-            list : [node_a, node_b, node_c] is a path starting from node_a to node_b going throught node_c
+        The result should be a set of frozensets (one per component),
+        For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
         """
-        chemin_realisable = False  # On regarde si src et dest sont dans une même composante_connexe.
-        for component in self.connected_components_set():
-            if component.issuperset({src, dest}):
-                chemin_realisable = True
-        if not chemin_realisable:
-            return None  # Si ce n'est pas le cas on ne retourne aucun chemin
-        path = []
-        pile = [(src, [src])]  # On créé une pile
-        while len(pile) != 0:  # Tant qu'on n'a pas un chemin allant a dest on continue de travailler sur la pile jusqu'à ce qu'elle soit vide 
-            nodes, path = pile.pop()  # On regarde en profondeur le chemin avant de passer à un autre
-            nodes_adj = [n[0] for n in self.graph[nodes] if (n[0] not in path) and (power >= n[1])]
-            for node_adj in nodes_adj:
-                if node_adj == dest:
-                    return path + [dest]  # On retourne le premier chemin trouvé
-                pile.append((node_adj, path + [node_adj]))
-        return None  # Si il n'y en a pas on retourne None
+        # On définit une liste visite pour
+        # ne pas reprendre les sommets déja visité
+        visite = set()
+        connected_components = []
+        # On regarde tous les sommets qui n'ont pas déja été visité
+        for node in self.nodes:
+            if node not in visite:
+                visite.add(node)
+                component = []
+                self.explore(node, visite, component)
+                connected_components.append(component)
+        # On retourne un set de frozenset
+        return set(map(frozenset, connected_components))
 
+    # Il s'agit d'un algorithme de parcours en profondeur récursif
+    def explore(self, node, visited, component):
+        component.append(node)
+        for neighbour in self.graph[node]:
+            if neighbour[0] not in visited:
+                visited.add(neighbour[0])
+                self.explore(neighbour[0], visited, component)
+
+    # Pour les gros graphes :
+
+    # On effectue un parcours en profondeur mais cette fois ci itératif
+    # L'execution est plus rapide
     def connected_components_set(self):
         """
-         The result should be a set of frozensets (one per component), 
-         For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
-         """
-        self.connected_components = []
-        for nodes in self.nodes:  # On regarde toutes les nodes.
-            sous_liste = []  # La composante lié à la node sera stocké ici
-            visite = [False]*(self.nb_nodes+1)
-            self.explore(visite, sous_liste, nodes)  # Exploration de la composante lié à la node
-            self.connected_components.append(sous_liste)  # Stockage de la composante
-        return set(map(frozenset, self.connected_components))  # On créé un set de frozenset et on enlève les doublons
-
-    def explore(self, visite, sous_liste, node):
-        visite[node] = True  # On mémorise la node visité
-        for nodes in self.graph[node]:  # On regarde les sommets lié à notre node
-            sous_liste.append(nodes[0])  # On les ajoute à la future composante_connexe
-            if not visite[nodes[0]]:  # On refait la même avec les node lié a la notre qui n'ont pas été visité
-                self.explore(visite, sous_liste, nodes[0])  # Á la fin on aura notre composante connexe
-
-# connected_components_set est en O(n+m) avec n = self.nb_nodes m = self.nb_edges
+        The result should be a set of frozensets (one per component),
+        For instance, for network01.in: {frozenset({1, 2, 3}), frozenset({4, 5, 6, 7})}
+        """
+        visited = set()
+        connected_components = []
+        for node in self.nodes:
+            if node not in visited:
+                visited.add(node)
+                component = []
+                pile = [node]
+                while pile:
+                    current_node = pile.pop()
+                    component.append(current_node)
+                    for neighbour in self.graph[current_node]:
+                        if neighbour[0] not in visited:
+                            visited.add(neighbour[0])
+                            pile.append(neighbour[0])
+                connected_components.append(component)
+        return set(map(frozenset, connected_components))
 
     def min_power(self, src, dest):
         """
-        Should return path, min_power. 
+        Should return path, min_power.
         """
+        # On determine la puissance maximal du graphe
         max_power = 0
         for node in self.nodes:
             for i in range(len(self.graph[node])):
                 if self.graph[node][i][1] > max_power:
-                    max_power = self.graph[node][i][1]  # On determine la puissance maximal du graph
-        if self.get_path_with_power(src, dest, max_power) is None:  # Si malgrès la puissance maximal trouvé on a aucun chemin on retourne None
+                    max_power = self.graph[node][i][1]
+        # Si malgrès la puissance maximal trouvé on a aucun chemin on retourne None
+        # On pourra enlever cette condition pour des arbres couvrant
+        if self.get_path_with_power(src, dest, max_power) is None:
             return None
         min_power = 0
         eps = 0.9
-        while max_power - min_power > eps:  # On effectue une recherche dichotomique sur la puissance pour trouver le chemin avec une puissance minimal
+        # On effectue une recherche dichotomique sur la puissance
+        # pour trouver le chemin avec une puissance minimal
+        while max_power - min_power > eps:
             a = self.get_path_with_power(src, dest, (max_power + min_power)/2)
             if a is not None:
                 max_power = (max_power + min_power)/2
             else:
                 min_power = (max_power + min_power)/2
-        return (self.get_path_with_power(src, dest, max_power), int(max_power))  # On retourne le tuple
-    
+        # On retourne le tuple
+        return (self.get_path_with_power(src, dest, max_power), int(max_power))
+
     def representation_graph(self, filname, src, dest):
-        representation = graphviz.Digraph('G', filename='/home/onyxia/work/ensae-prog23/representation_graph.gv', strict=True)  # On créé notre graph en donant l'emplacement du fichier.
-        representation.node(str(src), color='green')  # On représente la source en vert
-        representation.node(str(dest), color='red')  # On représente la destination en rouge
+        # On créé notre graph en donant l'emplacement du fichier.
+        representation = graphviz.Digraph('G', filename='/home/onyxia/work/ensae-prog23/representation_graph.gv', strict=True)
+        # On représente la source en vert
+        representation.node(str(src), color='green')
+        # On représente la destination en rouge
+        representation.node(str(dest), color='red')
+        # On représente les edges entre chaque node
         for node1 in self.nodes:
             for node2 in self.graph[node1]:
-                representation.edge(str(node1), str(node2[0]))  # On représente les edges entre chaque node
+                representation.edge(str(node1), str(node2[0]))
         path, power = self.min_power(src, dest)
+        # On représente en bleu le chemin de puissance minimal
         for i in range(len(path)-1):
-            representation.edge(str(path[i]), str(path[i+1]), color='blue')  # On représente en bleu le chemin de puissance minimal
+            representation.edge(str(path[i]), str(path[i+1]), color='blue')
         representation.attr(label='Graph de ' + filname + '\npuissance minimal requise pour aller de ' + str(src) + ' à ' + str(dest) + ' : ' + str(power))
-        return representation.view()  # Enfin on affiche le graph
+        # Enfin on affiche le graph
+        return representation.view()
 
     def kruskal(self):
         edges_visites = {}  # Mémoire des edges visités
@@ -181,38 +243,56 @@ def graph_from_file(filename):
     """
     Reads a text file and returns the graph as an object of the Graph class.
 
-    The file should have the following format: 
+    The file should have the following format:
         The first line of the file is 'n m'
         The next m lines have 'node1 node2 power_min dist' or 'node1 node2 power_min' (if dist is missing, it will be set to 1 by default)
         The nodes (node1, node2) should be named 1..n
         All values are integers.
 
-    Parameters: 
+    Parameters:
     -----------
     filename: str
         The name of the file
 
-    Outputs: 
+    Outputs:
     -----------
     G: Graph
         An object of the class Graph with the graph from file_name.
     """
     fichier = open("/home/onyxia/work/ensae-prog23/" + filename, "r")
-    L1 = fichier.read().replace(" ", ",").split()  # On créer une liste séparant chaque ligne
-    L2 = [x.replace(",", " ").split() for x in L1]  # Pour sépare les sous-éléments de la liste afin d'avoir une liste de liste
+    # On créer une liste séparant chaque ligne
+    L1 = fichier.read().replace(" ", ",").split()
+    # Pour sépare les sous-éléments de la liste afin d'avoir une liste de liste
+    L2 = [x.replace(",", " ").split() for x in L1]
     g = Graph()
-    g.__init__([i+1 for i in range(int(L2[0][0]))])  # On initialise le graphe grâce au nombre de nodes
-    if len(L2[1]) == 3:  # Cette condition signifique que le graphe prend comme distance de base 1 pour chaque edge
+    # On initialise le graphe grâce au nombre de nodes
+    g.__init__([i+1 for i in range(int(L2[0][0]))])
+    # Cette condition signifique que le graphe prend comme distance de base 1 pour chaque edge
+    if len(L2[1]) == 3:
+        # On ajoute les edges
         for node in L2[1:]:
-            g.add_edge(int(node[0]), int(node[1]), int(node[2]))  # On ajoute les edges
+            g.add_edge(int(node[0]), int(node[1]), int(node[2]))
         return g
+    # Sinon la distance est spécifié
     else:
-        for node in L2[1:]:  # Sinon la distance est spécifié
-            g.add_edge(int(node[0]), int(node[1]), int(node[2]), int(node[3]))  # On ajoute les edges
-        return g  # On renvoit le graph
+        # On ajoute les edges
+        for node in L2[1:]:
+            g.add_edge(int(node[0]), int(node[1]), int(node[2]), float(node[3]))
+        # On renvoit le graph
+        return g
 
-def routes_extract(filename):  # J'ai repris le principe de graph_from_file pour les fichiers routes.x.in
+# J'ai repris le principe de graph_from_file pour les fichiers routes.x.in
+def routes_extract(filename):
     fichier = open("/home/onyxia/work/ensae-prog23/" + filename, "r")
     L1 = fichier.read().replace(" ", ",").split()
     L2 = [x.replace(",", " ").split() for x in L1]
     return L2
+
+# Ici je ne prend que le nombre de sommets
+# et le nombre de trajet des fichier routes
+def little_routes_extract(file_nb):
+    fichier1 = open("/home/onyxia/work/ensae-prog23/input/network." + file_nb + ".in", "r")
+    fichier2 = open("/home/onyxia/work/ensae-prog23/input/routes." + file_nb + ".in", "r")
+    L1 = fichier1.read().replace(" ", ",").split()[0]
+    L2 = fichier2.read().replace(" ", ",").split()[0]
+    return L1.replace(",", " ").split(), L2.replace(",", " ").split()
