@@ -215,29 +215,103 @@ class Graph:
         # Enfin on affiche le graph
         return representation.view()
 
+    def find(self, parent, i):
+        if parent[i] == i:
+            return i
+        return self.find(parent, parent[i])
+
+    def apply_union(self, parent, rank, x, y):
+        xroot = self.find(parent, x)
+        yroot = self.find(parent, y)
+        if rank[xroot] < rank[yroot]:
+            parent[xroot] = yroot
+        elif rank[xroot] > rank[yroot]:
+            parent[yroot] = xroot
+        else:
+            parent[yroot] = xroot
+            rank[xroot] += 1
+
     def kruskal(self):
-        edges_visites = {}  # Mémoire des edges visités
-        weight_edge = []
+        a = Graph(self.nodes)
+        edges_memory = {}
+        weigth_edge = []
         for node1 in self.nodes:
             for edge in self.graph[node1]:
                 node2, p, d = edge
-                if not ((node1, node2) in edges_visites):
-                    edges_visites[(node1, node2)] = True
-                    edges_visites[(node2, node1)] = True
-                    weight_edge.append((node1, node2, p, d))
-        weight_edge.sort(key=lambda x: x[2])
-        G = Graph(self.nodes)
-        connected = {n: [n] for n in self.nodes}
-        for edge in weight_edge:
-            node1, node2, p, d = edge
-            if not (connected[node1][0] == connected[node2][0]):
-                G.add_edge(node1, node2, p, d)
-                for node in connected[node2]:
-                    connected[node1].append(node)
-                    connected[node] = connected[node1]
-            if G.nb_edges == G.nb_nodes - 1:
-                break
-        return G
+                if not ((node1, node2) in edges_memory):
+                    edges_memory[(node1, node2)] = True
+                    edges_memory[(node2, node1)] = True
+                    weigth_edge.append((node1, node2, p, d))
+        weigth_edge.sort(key=lambda x: x[2])
+        parent = {}
+        rank = {}
+        for node in self.nodes:
+            parent[node] = node
+            rank[node] = 0
+        for i in range(len(weigth_edge)):
+            node1, node2, p, d = weigth_edge[i]
+            x = self.find(parent, node1)
+            y = self.find(parent, node2)
+            if x != y:
+                a.add_edge(node1, node2, p, d)
+                self.apply_union(parent, rank, x, y)
+        return a
+
+    # J'ai repris Djikstra mais que j'ai changé pour un arbre
+    def get_path_tree(self, src, dest):
+        """
+        Find a path between src and dest in a tree, and return it as a list of nodes.
+        If no path is found, return None.
+        """
+        # Initialisation
+        dist = {n: float('inf') for n in self.nodes}
+        pred = {n: None for n in self.nodes}
+        visite = set()
+        heap = [(0, src)]
+        # Distance de la source à elle-même
+        dist[src] = 0
+        # Parcours
+        while heap:
+            (d, node) = heapq.heappop(heap)
+            if node == dest:
+                # On a trouvé la destination, on construit le chemin
+                path = []
+                while pred[node]:
+                    path.append(node)
+                    node = pred[node]
+                path.append(src)
+                path.reverse()
+                return path
+            visite.add(node)
+            for neighbor in self.graph[node]:
+                if neighbor[0] in visite:
+                    continue
+                alt = dist[node] + neighbor[1]
+                if alt < dist[neighbor[0]]:
+                    dist[neighbor[0]] = alt
+                    pred[neighbor[0]] = node
+                    heapq.heappush(heap, (alt, neighbor[0]))
+        # Pas de chemin trouvé
+        return None
+
+    def min_power_kruskal(self, src, dest):
+        """
+        Should return path, min_power.
+        """
+        # On recherche le chemin dans l'arbre
+        path = self.get_path_tree(src, dest)
+        # Si le chemin n'existe pas, on retourne None
+        if not path:
+            return None
+        # On détermine la puissance minimale nécessaire pour le chemin trouvé
+        min_power = 0
+        for i in range(len(path)-1):
+            u, v = path[i], path[i+1]
+            for neighbor in self.graph[u]:
+                if neighbor[0] == v:
+                    min_power = max(min_power, neighbor[1])
+                    break
+        return (path, min_power)
 
 def graph_from_file(filename):
     """

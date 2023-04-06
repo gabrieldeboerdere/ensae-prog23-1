@@ -4,27 +4,28 @@ import graphviz
 from random import randint
 
 data_path = "input/"
-file_name = "network.04.in"
+file_name = "network.3.in"
 
-g = gr.graph_from_file(data_path + file_name)
-print(g)
-a = g.connected_components_set()
-print(a)
-print()
-b = g.get_path_with_power(1, 4, 4)
-print(b)
-print()
-c = g.get_path_with_power(1, 4, 11)
-print(c)
-print()
-k = g.kruskal()
-print(k)
-print(g.min_power(1, 4))
-g.representation_graph("input/network.04.in", 1, 4)
+# QUESTION 1 et 4 #
+# g = gr.graph_from_file(data_path + file_name)
+# print(g)
 
-# g.representation_graph("input/network.1.in", 1, 4)
+# QUESTION 2 #
+# a = g.connected_components_set()
+# print(a)
 
-# QUESTION 10  #
+# QUESTION 3 et 5 #
+# b = g.get_path_with_power(1, 4, 4)
+# print(b)
+
+# QUESTION 6 #
+# c = g.min_power(1,4)
+# print (c)
+
+# QUESTION 7 #
+# g.representation_graph("input/network.04.in", 1, 4)
+
+# QUESTION 10 #
 # S1 = []
 # for i in range(1, 11):
 #     S2 = 0
@@ -32,10 +33,37 @@ g.representation_graph("input/network.04.in", 1, 4)
 #     g = gr.graph_from_file("input/network." + str(i) + ".in")
 #     for j in range(1, 11):
 #         t0 = time.perf_counter()
-#         g.min_power(randint(1, int(L1[0])), randint(1, int(L1[0])))
+#         a = g.min_power(randint(1, int(L1[0])), randint(1, int(L1[0])))
 #         t1 = time.perf_counter()
 #         S2 += t1-t0
+#         print(a)
 #     S1.append(int(L2[0])*S2/10)
 
 # for i in range(len(S1)):
 #     print('le temps d éxecution de min_power pour le fichier routes.', i, '.in est : ', S1[i])
+
+# QUESTION 12 #
+# k = g.kruskal()
+# print(k)
+
+# QUESTION 14 #
+# d = k.min_power_kruskal(1, 4)
+# print (d)
+
+# QUESTION 15 #
+S3 = []
+for i in range(1, 11):
+    S4 = 0
+    L1, L2 = gr.little_routes_extract(str(i))
+    g = gr.graph_from_file("input/network." + str(i) + ".in")
+    k = g.kruskal()
+    for j in range(1, 11):
+        t0 = time.perf_counter()
+        a = k.min_power_kruskal(randint(1, int(L1[0])), randint(1, int(L1[0])))
+        t1 = time.perf_counter()
+        S4 += t1-t0
+        print(a)
+    S3.append(int(L2[0])*S4/10)
+
+for i in range(len(S3)):
+    print('le temps d éxecution de min_power pour le fichier routes.',i, '.in est : ', S3[i], "soit", int(S3[i]/(60*60*24))+1, "jours")
