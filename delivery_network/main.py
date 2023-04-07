@@ -4,10 +4,10 @@ import graphviz
 from random import randint
 
 data_path = "input/"
-file_name = "network.3.in"
+file_name = "network.04.in"
 
 # QUESTION 1 et 4 #
-# g = gr.graph_from_file(data_path + file_name)
+g = gr.graph_from_file(data_path + file_name)
 # print(g)
 
 # QUESTION 2 #
@@ -22,31 +22,32 @@ file_name = "network.3.in"
 # c = g.min_power(1,4)
 # print (c)
 
+k = g.kruskal()
 # QUESTION 7 #
-# g.representation_graph("input/network.04.in", 1, 4)
+k.representation_graph("input/network.04.in", 1, 4)
 
 # QUESTION 10 #
-S1 = []
-for i in range(1, 11):
-    S2 = 0
-    L1, L2 = gr.little_routes_extract(str(i))
-    g = gr.graph_from_file("input/network." + str(i) + ".in")
-    for j in range(1, 11):
-        t0 = time.perf_counter()
-        a = g.min_power(randint(1, int(L1[0])), randint(1, int(L1[0])))
-        t1 = time.perf_counter()
-        S2 += t1-t0
-        print(a)
-    S1.append(int(L2[0])*S2/10)
+# S1 = []
+# for i in range(1, 11):
+#     S2 = 0
+#     L1, L2 = gr.little_routes_extract(str(i))
+#     g = gr.graph_from_file("input/network." + str(i) + ".in")
+#     for j in range(1, 11):
+#         t0 = time.perf_counter()
+#         a = g.min_power(randint(1, int(L1[0])), randint(1, int(L1[0])))
+#         t1 = time.perf_counter()
+#         S2 += t1-t0
+#         print(a)
+#     S1.append(int(L2[0])*S2/10)
 
-for i in range(len(S1)):
-    print('le temps d éxecution de min_power pour le fichier \
-       routes.',i+1, '.in est : ', S1[i], "soit", int(S1[i]/(60*60*24)), "jours\
-            et", int(24*(S1[i]/(60*60*24)-int(S1[i]/(60*60*24)))), "heures")
+# for i in range(len(S1)):
+#     print('le temps d éxecution de min_power pour le fichier \
+#        routes.',i+1, '.in est : ', S1[i], "soit", int(S1[i]/(60*60*24)), "jours\
+#             et", int(24*(S1[i]/(60*60*24)-int(S1[i]/(60*60*24)))), "heures")
 
 # QUESTION 12 #
-# k = g.kruskal()
-# print(k)
+k = g.kruskal()
+print(k)
 
 # QUESTION 14 #
 # d = k.min_power_kruskal(1, 4)
