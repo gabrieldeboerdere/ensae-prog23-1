@@ -7,7 +7,7 @@ data_path = "input/"
 file_name = "network.04.in"
 
 # QUESTION 1 et 4 #
-g = gr.graph_from_file(data_path + file_name)
+# g = gr.graph_from_file(data_path + file_name)
 # print(g)
 
 # QUESTION 2 #
@@ -22,9 +22,8 @@ g = gr.graph_from_file(data_path + file_name)
 # c = g.min_power(1,4)
 # print (c)
 
-k = g.kruskal()
 # QUESTION 7 #
-k.representation_graph("input/network.04.in", 1, 4)
+# k.representation_graph("input/network.04.in", 1, 4)
 
 # QUESTION 10 #
 # S1 = []
@@ -46,8 +45,8 @@ k.representation_graph("input/network.04.in", 1, 4)
 #             et", int(24*(S1[i]/(60*60*24)-int(S1[i]/(60*60*24)))), "heures")
 
 # QUESTION 12 #
-k = g.kruskal()
-print(k)
+# k = g.kruskal()
+# print(k)
 
 # QUESTION 14 #
 # d = k.min_power_kruskal(1, 4)
