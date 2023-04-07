@@ -206,7 +206,7 @@ class Graph:
         # On représente les edges entre chaque node
         for node1 in self.nodes:
             for node2 in self.graph[node1]:
-                representation.edge(str(node1), str(node2[0]))
+                representation.edge(str(node1), str(node2[0]), label=str(node2[1]))
         path, power = self.min_power(src, dest)
         # On représente en bleu le chemin de puissance minimal
         for i in range(len(path)-1):
