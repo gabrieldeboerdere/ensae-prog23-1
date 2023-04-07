@@ -23,7 +23,7 @@ file_name = "network.04.in"
 # print (c)
 
 # QUESTION 7 #
-# k.representation_graph("input/network.04.in", 1, 4)
+# g.representation_graph("input/network.04.in", 1, 4)
 
 # QUESTION 10 #
 # S1 = []
