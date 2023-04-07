@@ -26,21 +26,23 @@ file_name = "network.3.in"
 # g.representation_graph("input/network.04.in", 1, 4)
 
 # QUESTION 10 #
-# S1 = []
-# for i in range(1, 11):
-#     S2 = 0
-#     L1, L2 = gr.little_routes_extract(str(i))
-#     g = gr.graph_from_file("input/network." + str(i) + ".in")
-#     for j in range(1, 11):
-#         t0 = time.perf_counter()
-#         a = g.min_power(randint(1, int(L1[0])), randint(1, int(L1[0])))
-#         t1 = time.perf_counter()
-#         S2 += t1-t0
-#         print(a)
-#     S1.append(int(L2[0])*S2/10)
+S1 = []
+for i in range(1, 11):
+    S2 = 0
+    L1, L2 = gr.little_routes_extract(str(i))
+    g = gr.graph_from_file("input/network." + str(i) + ".in")
+    for j in range(1, 11):
+        t0 = time.perf_counter()
+        a = g.min_power(randint(1, int(L1[0])), randint(1, int(L1[0])))
+        t1 = time.perf_counter()
+        S2 += t1-t0
+        print(a)
+    S1.append(int(L2[0])*S2/10)
 
-# for i in range(len(S1)):
-#     print('le temps d éxecution de min_power pour le fichier routes.', i, '.in est : ', S1[i])
+for i in range(len(S1)):
+    print('le temps d éxecution de min_power pour le fichier \
+       routes.',i+1, '.in est : ', S1[i], "soit", int(S1[i]/(60*60*24)), "jours\
+            et", int(24*(S1[i]/(60*60*24)-int(S1[i]/(60*60*24)))), "heures")
 
 # QUESTION 12 #
 # k = g.kruskal()
@@ -51,19 +53,21 @@ file_name = "network.3.in"
 # print (d)
 
 # QUESTION 15 #
-S3 = []
-for i in range(1, 11):
-    S4 = 0
-    L1, L2 = gr.little_routes_extract(str(i))
-    g = gr.graph_from_file("input/network." + str(i) + ".in")
-    k = g.kruskal()
-    for j in range(1, 11):
-        t0 = time.perf_counter()
-        a = k.min_power_kruskal(randint(1, int(L1[0])), randint(1, int(L1[0])))
-        t1 = time.perf_counter()
-        S4 += t1-t0
-        print(a)
-    S3.append(int(L2[0])*S4/10)
+# S3 = []
+# for i in range(1, 11):
+#     S4 = 0
+#     L1, L2 = gr.little_routes_extract(str(i))
+#     g = gr.graph_from_file("input/network." + str(i) + ".in")
+#     k = g.kruskal()
+#     for j in range(1, 11):
+#         t0 = time.perf_counter()
+#         a = k.min_power_kruskal(randint(1, int(L1[0])), randint(1, int(L1[0])))
+#         t1 = time.perf_counter()
+#         S4 += t1-t0
+#         print(a)
+#     S3.append(int(L2[0])*S4/10)
 
-for i in range(len(S3)):
-    print('le temps d éxecution de min_power pour le fichier routes.',i, '.in est : ', S3[i], "soit", int(S3[i]/(60*60*24))+1, "jours")
+# for i in range(len(S3)):
+#     print('le temps d éxecution de min_power pour le fichier \
+#         routes.',i+1, '.in est : ', S3[i], "soit", int(S3[i]/(60*60*24)), "jours\
+#              et", int(24*(S3[i]/(60*60*24)-int(S3[i]/(60*60*24)))), "heures")
